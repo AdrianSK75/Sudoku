@@ -1,7 +1,5 @@
 var grid = [], colors = [], idLen = 0;
-colors[0] = "#962d2d"; colors[1] = "#a7bbc7";
-var beginSub = new Map();
-var subMatrix = new Map();
+colors[0] = "#962d2d"; colors[1] = "#f8eded";
  
 window.addEventListener('DOMContentLoaded', function() {
         var gameBoardClass = document.querySelector(".gameBoard");
@@ -13,10 +11,12 @@ window.addEventListener('DOMContentLoaded', function() {
             }
             $(gameBoardClass).append(`<br>`);
         }
-        setSubGrids();
-        insert();
-});
+        $(gameBoardClass).append(`<br>`);
+        $(gameBoardClass).append(`<button class = "restart" onclick = "location.reload();">New Board</button>`);
 
+        setSubGrids();
+        randomInsert();
+});
 
 function autoCorrection(id) {
         this.id = id;
@@ -27,11 +27,11 @@ function autoCorrection(id) {
        
 }
 
-function verifier(id) {
+function verifier(id) {        
         var value = document.getElementById(id).value;
         var row = parseInt(id.charAt(0)), col = parseInt(id.charAt(2));
         
-        grid[row][col] = value;
+        grid[row][col] = parseInt(value);
         if((checkRowCol(row, col) == 1 && checkBox(row, col) == 1)|| grid[row][col] == 0)
                 return 1;
         
@@ -41,36 +41,42 @@ function verifier(id) {
 
 function checkRowCol(row, col) {
         for(var i = 0; i < 9; ++i)
-                if(grid[row][i] == grid[row][col] && col != i) {
+                if(grid[row][i] === grid[row][col] && col != i) {
                         return 0;
                         
                 }
 
           
         for(var i = 0; i < 9; ++i)
-                if(grid[i][col] == grid[row][col] && row != i) {
+                if(grid[i][col] === grid[row][col] && row != i) {
                         return 0;
                        
                 }
      
-        return 1;
-   
+        return 1;   
+}
+
+function findTheCorner(ids) {
+        var row = parseInt(ids[0]), col = parseInt(ids[2]);
+        var beginRow = row - (row % 3), beginCol = col - (col % 3);
+
+        if(beginRow % 3 != 0)
+                ++beginRow;
+
+        if(beginCol % 3 != 0)
+                ++beginCol;
+        
+        return (beginRow + " " + beginCol.toString());
 }
 
 function checkBox(row, col) {   
-        var ids = (row + " " + col.toString()), beginID;
-        // I take the beginning of the submatrix of which this element is part
-        for(var i = 1; i <= 9; ++i) {
-                if(subMatrix[ids] == i) {
-                        beginID = beginSub[i];
-                        break;
-                }
-        }
-        
+        var ids = (row + " " + col.toString());
+        var beginID = findTheCorner(ids);
+
         var r = parseInt(beginID[0]), c = parseInt(beginID[2]);
         for(var i = r; i < r + 2; ++i) {
                 for(var j = c; j < c + 2; ++j) 
-                        if(grid[i][j] == grid[row][col] && (i != row && j != col))
+                        if(grid[i][j] === grid[row][col] && (i != row && j != col))
                                 return 0;
         }
 
@@ -79,18 +85,16 @@ function checkBox(row, col) {
 
 function setSubGrids() {
                 var bln = 0, fln = 3, gridcolor = [], pos, bol = false, beg = 1;
-                gridcolor[0] = "#232323"; gridcolor[1] = "#91091e";            
+                gridcolor[0] = "#232323"; gridcolor[1] = "#185adb";            
                 for(var i = fln; i <= 9; i += 3, bln += 3) {
                         var fcol = 3, bcol = 0;
                         for(var j = fcol; j <= 9; j += 3, bcol += 3) {
                                 pos = (bol == true) ? 1 : 0;
-                                beginSub[beg] = (bln + " " + bcol.toString());
 
                                 for(var n = bln; n < i; ++n) {
                                         for(var m = bcol; m < j; ++m) {
                                                 var ids = (n + " " + m.toString());
                                                 document.getElementById(ids).style.borderColor = gridcolor[pos];
-                                                subMatrix[ids] = beg;
                                         }
                                 }
                                 bol = !bol;
@@ -100,18 +104,25 @@ function setSubGrids() {
 
 }
 
-function insert() {
-        var impoort = [0,0,4,0,6,0,0,0,0,0,0,0,9,4,0,6,0,0,0,6,3,7,0,0,5,0,4,9,0,0,0,3,6,4,0,7,0,3,0,8,2,0,0,0,6,0,0,6,4,0,0,3,0,0,6,1,0,3,0,0,0,0,0,3,0,5,0,0,4,8,0,0,0,4,8,0,0,0,0,0,0];
-        var n = 0;
-        for(var i = 0; i < 9; ++i) {
-                for(var j = 0; j < 9; ++j, ++n) {
-                        var ids = (i + " " + j.toString());
-                        if(impoort[n] != 0) {
-                                grid[i][j] = impoort[n];
-                                document.getElementById(ids).value = impoort[n];
-                                document.getElementById(ids).disabled = true;
-                        }
+function randomInsert() {               
+                for(var row = 0; row < 9; ++row) {
+                        var subCount = 0;                                             
+                        for(var i = 0; i < 3; ++i) {
+                                var col = Math.floor(Math.random() * 3) + subCount;
+                                var val = Math.floor(Math.random() * 8) + 1;
+                                var ids = (row + " " + col.toString());
+                                grid[row][col] = val;
+                                
+                                if(checkRowCol(row, col) == 1 && checkBox(row, col) == 1) {
+                                        
+                                        document.getElementById(ids).value = grid[row][col];
+                                        document.getElementById(ids).disabled = true;
+                                        
+                                } else {
+                                        document.getElementById(ids).value = " ";
+                                        grid[row][col] = 0;
+                                }
+                                subCount+=3;                         
+                        }                   
                 }
-
-        } 
 }
