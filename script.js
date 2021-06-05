@@ -109,7 +109,7 @@ function randomInsert() {
                         var subCount = 0;                                             
                         for(var i = 0; i < 3; ++i) {
                                 var col = Math.floor(Math.random() * 3) + subCount;
-                                var val = (Math.floor(Math.random() * 25) + 1) % 10;;
+                                var val = (Math.floor(Math.random() * 9) + 1) % 10;
                                 var ids = (row + " " + col.toString());
                                 grid[row][col] = val;
                                 
