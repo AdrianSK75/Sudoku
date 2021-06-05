@@ -22,6 +22,7 @@ function autoCorrection(id) {
         this.id = id;
 
         var pos = (verifier(id) == 1) ? 1 : 0;
+
       
         return document.getElementById(id).style.background = colors[pos];
        
@@ -32,7 +33,7 @@ function verifier(id) {
         var row = parseInt(id.charAt(0)), col = parseInt(id.charAt(2));
         
         grid[row][col] = parseInt(value);
-        if((checkRowCol(row, col) == 1 && checkBox(row, col) == 1)|| grid[row][col] == 0)
+        if((checkRowCol(row, col) == 1 && checkBox(row, col) == 1))
                 return 1;
         
         grid[row][col] = 0;
@@ -74,10 +75,12 @@ function checkBox(row, col) {
         var beginID = findTheCorner(ids);
 
         var r = parseInt(beginID[0]), c = parseInt(beginID[2]);
-        for(var i = r; i < r + 2; ++i) {
-                for(var j = c; j < c + 2; ++j) 
-                        if(grid[i][j] === grid[row][col] && (i != row && j != col))
+        
+        for(var i = r; i <= r + 2; ++i) {
+                for(var j = c; j <= c + 2; ++j) {
+                        if(grid[i][j] === grid[row][col] && (i !== row && j !== col))
                                 return 0;
+                }
         }
 
         return 1;      
