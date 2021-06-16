@@ -88,15 +88,12 @@ function checkBox(row, col) {
 
                 for(let i = beginRow; i <= beginRow + 2; ++i) {
                                 for(let j = beginCol; j <= beginCol + 2; ++j) {
-                                        
-                                        if(grid[i][j] === grid[row][col] && (i !== row && j !== col)) {
-                                                
+                                         if(grid[i][j] === grid[row][col] && (i !== row && j !== col)) {
                                                 return 0;
                                         }
-                                }
-                        }
-
-                        return 1;      
+                                  }
+                }
+                return 1;      
 }
 
 function randomizer(item1, item2) {
