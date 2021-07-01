@@ -2,7 +2,7 @@ let grid = [];
 let subGrid = ["#293b5f", "#fb9300"];
 
 window.addEventListener('DOMContentLoaded', function() {
-                const gameBoardClass = document.querySelector(".gameBoard");
+                const gameBoard = document.querySelector(".gameBoard");
 
                 for (let row = 0; row < 9; ++row) {
                         grid[row] = [];
@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         }
                         
                         for (let col = 0; col < 9; ++col) {
-                                $(gameBoardClass).append(`<input class = "boardBtn" id = "`+ row + " " + col + `" oninput = "is_valid(id);" maxlength = 1/>`);
+                                $(gameBoard).append(`<input class = "boardBtn" id = "`+ row + " " + col + `" oninput = "is_valid(id);" maxlength = 1/>`);
                                 grid[row][col] = 0;
 
                                 if (col >= 3 && col < 6) {
@@ -26,37 +26,36 @@ window.addEventListener('DOMContentLoaded', function() {
                                 }
                                 
                         }
-                        
-                        $(gameBoardClass).append(`<br>`);
+                        $(gameBoard).append(`<br>`);
                 }
                 insert_on_table();
-                $(gameBoardClass).append(`<br>`);
-                $(gameBoardClass).append(`<button class = "restart" onclick = "location.reload();">New Board</button>`);
-
 });
 
 function insert_on_table() {               
                 for (let row = 0; row < 9; ++row) {
                         let subCount = 0;
+
                         for(var t = 1; t <= 3; ++t, subCount += 3) {
-                                const number = {
-                                        col: randomizer(subCount, 3),
-                                        value: randomizer(1, 8),
-                                }
-                                let ids = (row + " " + number.col.toString());
+                                const number = {col: randomizer(subCount, 3), value: randomizer(1, 8),}
+                                let id = (row + " " + number.col.toString());
+                                
                                 grid[row][number.col] = number.value;
                                         
                                 if (checkValue(row, number.col) == 1) {
                                                 
-                                        document.getElementById(ids).value = grid[row][number.col];
-                                        document.getElementById(ids).disabled = true;
+                                        document.getElementById(id).value = grid[row][number.col];
+                                        document.getElementById(id).disabled = true;
                                                 
                                 } else {
-                                        document.getElementById(ids).value = " ";
+                                        document.getElementById(id).value = " ";
                                         grid[row][number.col] = 0;
                                 }       
                         }                   
                 }
+}
+
+function randomizer(item1, item2) {
+        return item1 + Math.floor(Math.random() * item2);
 }
 
 function is_valid(id) {        
@@ -84,8 +83,7 @@ function checkRow(row, col) {
                                 return 0;
                                 
                         }
-                }
-                
+                }               
                 return 1;
 }
 
@@ -95,28 +93,27 @@ function checkCol(row, col) {
                                 return 0;
                         
                         }
-                }
-                
+                }             
                 return 1;   
 }
 
 function checkBox(row, col) {   
-                let beginRow = row - (row % 3);
-                let beginCol = col - (col % 3);
-
-                beginRow += (beginRow % 3 != 0) ? 1 : 0;
-                beginCol += (beginCol % 3 != 0) ? 1 : 0;  
+                let beginRow = getCoordonates(row);
+                let beginCol = getCoordonates(col);
 
                 for (let i = beginRow; i <= beginRow + 2; ++i) {
                                 for (let j = beginCol; j <= beginCol + 2; ++j) {
                                          if(grid[i][j] === grid[row][col] && (i !== row && j !== col)) {
                                                 return 0;
                                         }
-                                  }
+                                }
                 }
                 return 1;      
 }
 
-function randomizer(item1, item2) {
-                return item1 + Math.floor(Math.random() * item2);
+function getCoordonates(xy) {
+        xy = xy - (xy % 3);
+        if(xy % 3 != 0)
+                ++xy;
+        return xy;
 }
