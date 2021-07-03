@@ -41,8 +41,7 @@ function insert_on_table() {
                                 
                                 grid[row][number.col] = number.value;
                                         
-                                if (checkValue(row, number.col) == 1) {
-                                                
+                                if (checkValue(row, number.col) == 1) {              
                                         document.getElementById(id).value = grid[row][number.col];
                                         document.getElementById(id).disabled = true;
                                                 
@@ -80,8 +79,7 @@ function checkValue(row, col) {
 function checkRow(row, col) {
                 for (let i = 0; i < 9; ++i) {
                         if(grid[row][i] === grid[row][col] && col != i) {
-                                return 0;
-                                
+                                return 0;                               
                         }
                 }               
                 return 1;
@@ -90,16 +88,15 @@ function checkRow(row, col) {
 function checkCol(row, col) {            
                 for (let i = 0; i < 9; ++i) {
                         if(grid[i][col] === grid[row][col] && row != i) {
-                                return 0;
-                        
+                                return 0;                        
                         }
                 }             
                 return 1;   
 }
 
 function checkBox(row, col) {   
-                let beginRow = getCoordonates(row);
-                let beginCol = getCoordonates(col);
+                let beginRow = getCoordinates(row);
+                let beginCol = getCoordinates(col);
 
                 for (let i = beginRow; i <= beginRow + 2; ++i) {
                                 for (let j = beginCol; j <= beginCol + 2; ++j) {
@@ -111,7 +108,7 @@ function checkBox(row, col) {
                 return 1;      
 }
 
-function getCoordonates(xy) {
+function getCoordinates(xy) {
         xy = xy - (xy % 3);
         if(xy % 3 != 0)
                 ++xy;
